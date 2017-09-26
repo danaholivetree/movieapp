@@ -2,14 +2,12 @@ var express = require('express');
 var router = express.Router();
 const knex = require('../knex')
 
-/* GET users listing. */
 router.get('/', function(req, res, next) {
   knex('movie')
     .select()
     .then( (items) => {
       res.setHeader('Content-Type', 'application/json')
-      res.send(JSON.stringify(items))
-      // res.render('index')
+      res.sendStatus(200)
     })
     .catch( (err) => next(err) )
 });
@@ -20,15 +18,14 @@ router.get('/:id', function(req, res, next) {
     .select()
     .where('id', id)
     .then( (items) => {
-      console.log('items ', items)
       if (items.length < 1) {
         var err = new Error('Bad Request');
         err.status = 400;
         throw err;
       }
       else {
-      res.setHeader('Content-Type', 'application/json')
-      res.send(JSON.stringify(items[0]))
+        res.setHeader('Content-Type', 'application/json')
+        res.sendStatus(200)
       }
     })
     .catch( (err) => next(err) )
@@ -44,8 +41,7 @@ router.post('/', function(req, res, next) {
     .insert(req.body, 'id')
     .then( (id) => {
       res.setHeader('Content-Type', 'application/json')
-      res.send(JSON.stringify(id))
-      // res.render('index')
+      res.sendStatus(200)
     })
     .catch( (err) => next(err) )
 });
@@ -57,12 +53,10 @@ router.patch('/:id', function(req, res, next) {
     throw(err);
   }
   let id = req.params.id
-
   knex('movie')
     .select()
     .where('id', id)
     .then( (stuff) => {
-
       if (!stuff) {
         var err = new Error('Not Found');
         err.status = 404;
@@ -74,10 +68,8 @@ router.patch('/:id', function(req, res, next) {
         .where('id', id)
         .then( (items) => {
           res.setHeader('Content-Type', 'application/json')
-          res.json(items)
-          // res.render('index')
+          res.sendStatus(200)
         })
-
         .catch( (err) => next(err) )
       }
     });
@@ -85,7 +77,6 @@ router.patch('/:id', function(req, res, next) {
 
 router.delete('/:id', function(req, res, next) {
   let id = req.params.id
-  console.log(req.body)
   knex('movie')
     .select()
     .where('id', id)
@@ -101,11 +92,10 @@ router.delete('/:id', function(req, res, next) {
         .where('id', id)
         .then( (items) => {
           res.setHeader('Content-Type', 'application/json')
-          res.send(JSON.stringify(items))
+          res.sendStatus(200)
         })
-
-      // res.render('index')
     })
     .catch( (err) => next(err) )
   });
+
 module.exports = router;
